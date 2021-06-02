@@ -1,0 +1,12 @@
+<?xml version="1.0" ?>
+<testsuite errors="0" failures="0" name="TestDoE-20210602111640" tests="5" time="0.003">
+	<testcase classname="TestDoE" name="test_DoE1" time="0.001"/>
+	<testcase classname="TestDoE" name="test_DoE2" time="0.001"/>
+	<testcase classname="TestDoE" name="test_DoE3" time="0.000"/>
+	<testcase classname="TestDoE" name="test_DoE4" time="0.001"/>
+	<testcase classname="TestDoE" name="test_DoE5" time="0.000"/>
+	<system-out>
+<![CDATA[]]>	</system-out>
+	<system-err>
+<![CDATA[]]>	</system-err>
+</testsuite>
