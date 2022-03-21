@@ -1,11 +1,13 @@
 <?xml version="1.0" ?>
-<testsuite errors="0" failures="0" name="TestPMM-20210602111657" tests="4" time="7.985">
-	<testcase classname="TestPMM" name="test_PMM1" time="2.406"/>
-	<testcase classname="TestPMM" name="test_PMM2" time="2.250"/>
-	<testcase classname="TestPMM" name="test_PMM3" time="1.734"/>
-	<testcase classname="TestPMM" name="test_PMM4" time="1.594"/>
+<testsuite errors="0" failures="0" name="TestPMM-20211207170215" tests="4" time="7.390">
+	<testcase classname="TestPMM" name="test_PMM1" time="2.248"/>
+	<testcase classname="TestPMM" name="test_PMM2" time="2.105"/>
+	<testcase classname="TestPMM" name="test_PMM3" time="1.583"/>
+	<testcase classname="TestPMM" name="test_PMM4" time="1.454"/>
 	<system-out>
 <![CDATA[]]>	</system-out>
 	<system-err>
-<![CDATA[]]>	</system-err>
+<![CDATA[G:\Python_lib\PMM.py:175: DeprecationWarning: elementwise comparison failed; this will raise an error in the future.
+  if w==[]: w=zeros(len(x))
+]]>	</system-err>
 </testsuite>

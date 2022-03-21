@@ -9,8 +9,7 @@ email: romain.coulon@bipm.org
 """
 
 import unittest, xmlrunner
-from numpy import mean, asarray, average, sqrt, zeros
-
+from numpy import asarray, mean, average, sqrt, zeros
 
 def PMM(x,u,*,autoRej=False,k=2.5,conv=1e-4): # PMM calculation
     """This function calculates the Power-Modered Mean (PMM) on a data sample.
@@ -23,6 +22,8 @@ def PMM(x,u,*,autoRej=False,k=2.5,conv=1e-4): # PMM calculation
     This method is applied to calculate de Key Comparison Reference Value (KCRV)
     related to international inter-laboratory comparisons of the CIPM/CCRI(II). 
     It was validated from PMM v1.xlsm provided by S. Pommé [email of the 14 Jan 2020]
+    
+    This function uses the method asarray, mean, average, sqrt and zeros from the module numpy.py
     
     :param x: Sample of values
     :type x: array of floats
@@ -38,6 +39,14 @@ def PMM(x,u,*,autoRej=False,k=2.5,conv=1e-4): # PMM calculation
     :type x_ref: float
     :param ux_ref: Estimation of uncertainty of the reference value
     :type ux_ref: float
+    :param d: Estimation of the degrees of equivalence
+    :type d: array of floats
+    :param ud: Estimation of the uncertainties related to the degrees of equivalence
+    :type ud: array of floats    
+    :param dr: Estimation of the relative degrees of equivalence
+    :type dr: array of floats
+    :param udr: Estimation of the uncertainties related to the relative degrees of equivalence
+    :type udr: array of floats  
     :param w: Weights associated to each data point
     :type w: array of floats
     :param alpha: Value of the power paramater alpha 
@@ -49,7 +58,7 @@ def PMM(x,u,*,autoRej=False,k=2.5,conv=1e-4): # PMM calculation
     :param rej: Index of the rejected points
     :type rej: list of int  
 
-    :return y: x_ref, ux_ref, w, alpha, birge0, s, rej
+    :return y: x_ref, ux_ref, d, ud, dr, udr, w, alpha, birge0, s, rej
     :rtype y: tuple
     """
    
@@ -135,7 +144,49 @@ def PMM(x,u,*,autoRej=False,k=2.5,conv=1e-4): # PMM calculation
             x_ref=sum(w*xf) # reference value
     if s<0: # the inter-laboratory uncertainty is negative = correlation
         warn("The inter-laboratory uncertainty is negative means that correlation between points could exists")
-    return x_ref, ux_ref, w, alpha, birge0, s, rej
+    
+    
+    
+    def DoE(x,u,x_ref,ux_ref,*,w=[],k=2):
+        """This function aims to calculate Degrees of equivalence with Power-Modered Mean (PMM) estimation of reference values.
+        
+        References: 
+            [Accred Qual Assur (2008)13:83-89, Metrologia 52(2015)S200]
+            https://link.springer.com/article/10.1007/s00769-007-0330-1
+            https://iopscience.iop.org/article/10.1088/0026-1394/52/3/S200/pdf
+        
+        :param x: Sample of values
+        :type x: array of floats
+        :param u: Sample of standard uncertainties related to the values
+        :type u: array of floats
+        :param x_ref: Estimation of the reference value
+        :type x_ref: float
+        :param ux_ref: Estimation of uncertainty of the reference value
+        :type ux_ref: float
+        
+        :param w: (Optional) Weights associated to each data point.
+        :type w: array of floats
+        :param k: (Optional) Coverage factor (set by default equal to 2)
+        :type k: float    
+               
+        :return y: d, ud, dr, udr
+        :rtype y: tuple
+        """
+        if w==[]: w=zeros(len(x))
+        x=asarray(x) # format input data
+        u=asarray(u) # format input data
+        w=asarray(w) # format input data
+        k=2
+        d=x-x_ref  # euclidian distance from the reference value
+        u2d=(1-2*w)*u**2+ux_ref**2 # variance associated with DE (the weight factor is available)
+        ud=k*u2d**0.5     # enlarged standard deviation associated with DoE
+        dr=d/x_ref        # relative DoE
+        udr=ud/x_ref      # relative u(DoE)
+        return d, ud, dr, udr
+    
+    d, ud, dr, udr=DoE(x,u,x_ref,ux_ref,w=w)
+
+    return x_ref, ux_ref, d, ud, dr, udr, w, alpha, birge0, s, rej
 
 class TestPMM(unittest.TestCase): # test the PMM function
     def test_PMM1(self): # Ba133 before 2015
